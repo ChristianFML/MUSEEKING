@@ -1,0 +1,187 @@
+//Base de datos para Museeking
+//Base de datos para Museeking
+//Esto solo es un prototipo, sirve para ejemplificar categorías y relaciones entre ellas.
+//Tipos de nodos: 
+//	persona(con nombre y ocupación)
+//	estado de ánimo
+//	género
+//	artista
+//	canción.
+//Tipos de relaciones: 
+//	"x" persona es amigo de "y"
+//	"x" persona se siente de "y" manera
+//	"x" artista combina con "y" sentimiento
+//	a "x" persona le gusta "y" artista o género
+//	a "x" persona le gusta "y" artista mientras realiza una actividad en específico
+//	"x" genero tiene a "y" artista
+//	"x" artista compuso "y" canción
+//	a "x" persona le gustó"y" canción
+
+//Declaramos personas primero:
+
+CREATE (di:Persona { nombre: "Diego", ocupacion: "Medicina" })
+CREATE (ma:Persona { nombre: "Mario", ocupacion: "Ingeniería en Computacion"})
+CREATE (jo:Persona { nombre: "Joice", ocupacion: "Ingeniería Civil"})
+CREATE (je:Persona { nombre: "Jennifer", ocupacion: "Medicina"})
+CREATE (ke:Persona { nombre: "Kevin", ocupacion: "Derecho"})
+CREATE (pa:Persona { nombre: "Pablo", ocupacion: "Diseño Gráfico"})
+
+//Luego declaramos posibles estados de ánimo de las personas
+
+CREATE (fe:Sentimiento { nombre: "Feliz" })
+CREATE (en:Sentimiento { nombre: "Enojado" })
+CREATE (tr:Sentimiento { nombre: "Triste" })
+CREATE (fi:Sentimiento { nombre: "Fiesta" })
+CREATE (re:Sentimiento { nombre: "Rejalado" })
+
+//Ahora se crean los géneros
+
+CREATE (ro:Genero { nombre: "Rock" })
+CREATE (po:Genero { nombre: "Pop" })
+CREATE (el:Genero { nombre: "Electrónica" })
+
+//Ahora declaramos artistas para cada género
+
+CREATE (tk:Artista { nombre: "The Killers" })
+CREATE (sp:Artista { nombre: "The Smashing Pumpkins" })
+CREATE (sg:Artista { nombre: "Selena Gomez" })
+CREATE (ri:Artista { nombre: "Rihanna" })
+CREATE (de:Artista { nombre: "Deadmau5" })
+CREATE (ky:Artista { nombre: "Kygo" })
+
+//Ahora creamos canciones para cada artista
+
+CREATE (tk1:Cancion { nombre: "When You Were Young" })
+CREATE (tk2:Cancion { nombre: "Shot At The Night" })
+CREATE (sp1:Cancion { nombre: "Zero" })
+CREATE (sp2:Cancion { nombre: "Cherub Rock" })
+CREATE (sg1:Cancion { nombre: "Come And Get It" })
+CREATE (sg2:Cancion { nombre: "Good For You" })
+CREATE (ri1:Cancion { nombre: "Umbrella" })
+CREATE (ri2:Cancion { nombre: "Work" })
+CREATE (de1:Cancion { nombre: "Strobe" })
+CREATE (de2:Cancion { nombre: "The Veldt" })
+CREATE (ky1:Cancion { nombre: "Stay" })
+CREATE (ky2:Cancion { nombre: "Stole The Show" })
+
+//Ahora lo esencial: las relaciones entre todos los nodos
+
+CREATE
+	(di)-[:Es_amigo]->(je)
+CREATE
+	(ma)-[:Es_amigo]->(ke)
+CREATE
+	(di)-[:Es_amigo]->(pa)
+CREATE
+	(jo)-[:Es_amigo]->(je)
+
+
+CREATE
+	(di)-[:Se_siente]->(fe)
+CREATE
+	(ma)-[:Se_siente]->(tr)
+CREATE
+	(jo)-[:Se_siente]->(en)
+CREATE
+	(je)-[:Se_siente]->(fi)
+CREATE
+	(ke)-[:Se_siente]->(re)
+CREATE
+	(pa)-[:Se_siente]->(fe)
+
+
+CREATE
+	(tk)-[:Relacionado_a]->(re)
+CREATE
+	(sp)-[:Relacionado_a]->(en)
+CREATE
+	(sg)-[:Relacionado_a]->(fe)
+CREATE
+	(ri)-[:Relacionado_a]->(fe)
+CREATE
+	(de)-[:Relacionado_a]->(re)
+CREATE
+	(ky)-[:Relacionado_a]->(fi)
+
+
+CREATE
+	(ro)-[:Tiene_a]->(tk)
+CREATE
+	(ro)-[:Tiene_a]->(sp)
+CREATE
+	(po)-[:Tiene_a]->(sg)
+CREATE
+	(po)-[:Tiene_a]->(ri)
+CREATE
+	(el)-[:Tiene_a]->(de)
+CREATE
+	(el)-[:Tiene_a]->(ky)
+
+
+CREATE
+	(tk)-[:Compuso]->(tk1)
+CREATE
+	(tk)-[:Compuso]->(tk2)
+CREATE
+	(sp)-[:Compuso]->(sp1)
+CREATE
+	(sp)-[:Compuso]->(sp2)
+CREATE
+	(sg)-[:Compuso]->(sg1)
+CREATE
+	(sg)-[:Compuso]->(sg2)
+CREATE
+	(ri)-[:Compuso]->(ri1)
+CREATE
+	(ri)-[:Compuso]->(ri2)
+CREATE
+	(de)-[:Compuso]->(de1)
+CREATE
+	(de)-[:Compuso]->(de2)
+CREATE
+	(ky)-[:Compuso]->(ky1)
+CREATE
+	(ky)-[:Compuso]->(ky2)
+
+
+CREATE
+	(jo)-[:Le_gusta]->(po)
+CREATE
+	(je)-[:Le_gusta]->(el)
+CREATE
+	(di)-[:Le_gusta]->(ro)
+CREATE
+	(ma)-[:Le_gusta]->(ro)
+CREATE
+	(ke)-[:Le_gusta]->(ro)
+CREATE
+	(pa)-[:Le_gusta]->(el)
+
+
+CREATE
+	(di)-[:Le_gusta]->(tk)
+CREATE
+	(ma)-[:Le_gusta]->(sp)
+CREATE
+	(je)-[:Le_gusta]->(ky)
+CREATE
+	(pa)-[:Le_gusta]->(de)
+
+
+CREATE
+	(jo)-[:Para_Hacer_ejercicio]->(ri)
+CREATE
+	(ke)-[:Para_Estudiar]->(tk)
+CREATE
+	(pa)-[:Para_Manejar]->(ky)
+
+
+CREATE
+	(jo)-[:Escucho]->(sg1)
+CREATE
+	(ma)-[:Escucho]->(sp2)
+CREATE
+	(je)-[:Escucho]->(de1)
+
+//Mostrar todos los nodos y relaciones
+RETURN di, ma, jo, je, ke, pa, fe, en, tr, fi, re, ro, po, el, tk, sp, sg, ri, de, ky, tk1, tk2, sp1,  sp2, sg1, sg2, ri1, ri2, de1, de2, ky1, ky2

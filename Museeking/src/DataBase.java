@@ -9,8 +9,8 @@
  * Integrantes:
  *      Christian Morales - 15015
  *      José Luis Méndez - 15024
- *      Rodrigo Barrios - 15
- *      Juan García - 15
+ *      Rodrigo Barrios - 15009
+ *      Juan García - 15046
  */
 
 /**
@@ -25,26 +25,24 @@ import org.neo4j.graphdb.Transaction;
 
 public class DataBase {
     
-    public DataBase(){ }
+    public GraphDatabaseService db;
     
-    //Aquí se cargan todos los valores de la base de datos, donde se aloja todo lo que ya está contenido en ella
-    public void levantarDataBase(GraphDatabaseService DB){
-               
-        //Se intenta realizar una transacción u operación en Neo4j
-        try (Transaction tx = DB.beginTx()){
-            
-//********* CREACIÓN DE NODOS ***********************************************************************************************************
-            
-            // U S U A R I O S
-            Node user1 = DB.createNode(Nodes.Usuario);
-            user1.setProperty("Id",1);
-            user1.setProperty("Nombre", "Christian");
-            
-//********* CREACIÓN DE RELACIONES *******************************************************************************************************
-            
-            //Relationship rel1 = movie1.createRelationshipTo(actor1,Labels.esActor);
-            
-            tx.success();
-        }
+    public DataBase(GraphDatabaseService DB){
+        db = DB;
+    }
+    
+    //Este metodo se encarga de agregar un nuevo usuario
+    public void crearUsuario(String nombre){
+        Node user = db.createNode(Nodes.Usuario);
+        user.setProperty("nombre", nombre);
+    }
+    
+    //Este metodo se encarga de indicar cuando una cancion le gusta a un usuario
+    public void crearRelacion(Node usuario, Node cancion){
+//        try (Transaction tx = db.beginTx()){
+//            db.execute("("+usuario+")-[:like]->("+cancion+")");
+//            tx.success();
+//        }    
+        cancion.createRelationshipTo(usuario,Labels.like);
     }
 }

@@ -9,8 +9,8 @@
  * Integrantes:
  *      Christian Morales - 15015
  *      José Luis Méndez - 15024
- *      Rodrigo Barrios - 15
- *      Juan García - 15
+ *      Rodrigo Barrios - 15009
+ *      Juan García - 15046
  */
 
 /**
@@ -20,5 +20,5 @@
 import org.neo4j.graphdb.RelationshipType;
 
 public enum Labels implements RelationshipType{
-        Like;
+        compuso, contiene, relacionado, like, listen;
     }

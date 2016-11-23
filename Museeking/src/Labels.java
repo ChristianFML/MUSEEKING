@@ -14,11 +14,13 @@
  */
 
 /**
- * Nodes.java
- *      Esta clase se encarga del manejo de los Labels con los que se relacionaran los Nodos
+ * Labels.java
+ *      Esta clase se encarga del manejo de los distintos labels (la forma en que se relacionaran los nodos)
  */
 import org.neo4j.graphdb.RelationshipType;
 
 public enum Labels implements RelationshipType{
+        //que artista COMPUSO que cancion, que genero CONTIENE que artistas, 
+        //que artistas se RELACIONAN con que estado, que cancion LIKE usuario, que genero LISTEN que usuario
         compuso, contiene, relacionado, like, listen;
     }

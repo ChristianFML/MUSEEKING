@@ -15,7 +15,7 @@
 
 /**
  * Nodes.java
- *      Esta clase se encarga del manejo de los distintos Nodos
+ *      Esta clase se encarga del manejo de los Labels con los que se relacionaran los Nodos
  */
 import org.neo4j.graphdb.Label;
 

@@ -14,8 +14,8 @@
  */
 
 /**
- * Nodes.java
- *      Esta clase se encarga del manejo de los Labels con los que se relacionaran los Nodos
+ * Requests.java
+ *      Esta clase se encarga de realizar todas las busquedas especificas
  */
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -27,7 +27,7 @@ import org.neo4j.graphdb.Transaction;
 public class Requests {
     
     static Result resultado, resultado1;
-    public GraphDatabaseService db;
+    private GraphDatabaseService db;
     
     public Requests(GraphDatabaseService DB){
         db = DB;
@@ -50,8 +50,7 @@ public class Requests {
     }
     
     //Se regresa un array tipo String con los nombres de los usuarios actuales
-    public String[] usuarios(){
-                       
+    public String[] usuarios(){                   
         try (Transaction tx = db.beginTx()){
             resultado = db.execute("MATCH (P1:Usuario) RETURN P1.nombre");
             Iterator<String>r1=resultado.columnAs("P1.nombre");
@@ -74,20 +73,25 @@ public class Requests {
     public LinkedList<String> gustos(String nombre){
                        
         try (Transaction tx = db.beginTx()){
+            resultado = db.execute("MATCH (P1:Usuario)-[C:like]->(P2:cancion) RETURN P1.nombre");
             resultado1 = db.execute("MATCH (P1:Usuario)-[C:like]->(P2:cancion) RETURN P2.nombre");
+            Iterator<String>r1=resultado1.columnAs("P1.nombre");
             Iterator<String>r2=resultado1.columnAs("P2.nombre");
             //Se crearon listas para insertar los datos del iterador
             LinkedList<String> res1 = new LinkedList();            
             //Se agregan los datos a la lista
-            while (r2.hasNext()){
-                res1.add(r2.next());
+            while (r1.hasNext()){
+                if(r1.next().equals(nombre)){
+                    res1.add(r2.next());
+                }else{
+                    r2.next();
+                }
             }
             tx.success();
             return res1;
         }       
     }
     
-    // N O  E S T A  L I S T O
     //Muestra los generos que escucha el usuario
     public LinkedList<String> generosUsuario(String nombre){
                        
@@ -111,7 +115,6 @@ public class Requests {
         }       
     }
     
-    //NO ESTA LISTO
     //Despliega una playlist con canciones con base en lo que sus amigos escuchan
     public LinkedList<String> recomendacionAmigos(String nombre){
                        
@@ -135,7 +138,6 @@ public class Requests {
         }       
     }
     
-    //NO ESTA LISTO
     //Despliega una playlist con canciones que el programa le sugiere
     public LinkedList<String> descubrimientoSemanal(String nombre){
         
@@ -242,6 +244,22 @@ public class Requests {
                        
         try (Transaction tx = db.beginTx()){
             resultado = db.execute("MATCH (P1:cancion) RETURN P1.nombre LIMIT 10");
+            Iterator<String>r1=resultado.columnAs("P1.nombre");
+            //Se crearon listas para insertar los datos del iterador
+            LinkedList<String> res1 = new LinkedList();            
+            //Se agregan los datos a la lista
+            while (r1.hasNext()){
+                res1.add(r1.next());
+            }
+            tx.success();
+            return res1;
+        }       
+    }
+    
+    public LinkedList<String> estado(){
+                       
+        try (Transaction tx = db.beginTx()){
+            resultado = db.execute("MATCH (P1:estado) RETURN P1.nombre LIMIT 10");
             Iterator<String>r1=resultado.columnAs("P1.nombre");
             //Se crearon listas para insertar los datos del iterador
             LinkedList<String> res1 = new LinkedList();            

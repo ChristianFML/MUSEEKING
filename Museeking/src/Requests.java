@@ -74,19 +74,13 @@ public class Requests {
     public LinkedList<String> gustos(String nombre){
                        
         try (Transaction tx = db.beginTx()){
-            resultado = db.execute("MATCH (P1:Usuario)-[C:like]->(P2:cancion) RETURN P1.nombre");
             resultado1 = db.execute("MATCH (P1:Usuario)-[C:like]->(P2:cancion) RETURN P2.nombre");
-            Iterator<String>r1=resultado.columnAs("P1.nombre");
             Iterator<String>r2=resultado1.columnAs("P2.nombre");
             //Se crearon listas para insertar los datos del iterador
             LinkedList<String> res1 = new LinkedList();            
             //Se agregan los datos a la lista
-            while (r1.hasNext()){
-                if(r1.next().equals(nombre)){
-                    res1.add(r2.next());
-                }else{
-                    r2.next();
-                }
+            while (r2.hasNext()){
+                res1.add(r2.next());
             }
             tx.success();
             return res1;

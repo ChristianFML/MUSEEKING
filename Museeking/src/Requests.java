@@ -49,6 +49,27 @@ public class Requests {
         }
     }
     
+    //Se regresa un array tipo String con los nombres de los usuarios actuales
+    public String[] usuarios(){
+                       
+        try (Transaction tx = db.beginTx()){
+            resultado = db.execute("MATCH (P1:Usuario) RETURN P1.nombre");
+            Iterator<String>r1=resultado.columnAs("P1.nombre");
+            //Se crearon listas para insertar los datos del iterador
+            LinkedList<String> res1 = new LinkedList();            
+            //Se agregan los datos a la lista
+            while (r1.hasNext()){
+                res1.add(r1.next());
+            }
+            tx.success();
+            String[] names = new String[res1.size()];
+            for(int i = 0; i < names.length; i++){
+                names[i] = res1.get(i);
+            }
+            return names;
+        }       
+    }
+    
     //Muestra las canciones que le gustan a un usuario en especifico
     public LinkedList<String> gustos(String nombre){
                        
@@ -97,8 +118,8 @@ public class Requests {
     }
     
     //NO ESTA LISTO
-    //Despliega una playlist con canciones que le podrian gustar
-    public LinkedList<String> descubrimientoSemanal(){
+    //Despliega una playlist con canciones con base en lo que sus amigos escuchan
+    public LinkedList<String> recomendacionAmigos(String nombre){
                        
         try (Transaction tx = db.beginTx()){
             resultado = db.execute("MATCH (P1:Usuario)-[C:like]->(P2:cancion) RETURN P1.nombre");
@@ -109,9 +130,48 @@ public class Requests {
             LinkedList<String> res1 = new LinkedList();            
             //Se agregan los datos a la lista
             while (r1.hasNext()){
+                if(r1.equals(nombre)){
+                    r2.next();
+                }else{
+                    res1.add(r2.next());
+                }
             }
             tx.success();
             return res1;
+        }       
+    }
+    
+    //NO ESTA LISTO
+    //Despliega una playlist con canciones que el programa le sugiere
+    public LinkedList<String> descubrimientoSemanal(String nombre){
+        
+        try (Transaction tx = db.beginTx()){
+            resultado = db.execute("MATCH (P1:Usuario)-[C:listen]->(P2:genero) RETURN P1.nombre");
+            resultado1 = db.execute("MATCH (P1:Usuario)-[C:listen]->(P2:genero) RETURN P1.nombre");
+            Iterator<String>r1=resultado.columnAs("P1.nombre");
+            Iterator<String>r2=resultado1.columnAs("P2.nombre");
+            //Se crearon listas para insertar los datos del iterador
+            LinkedList<String> res1 = new LinkedList();            
+            //Se agrega a la lista todos los generos que no escucha el usuario
+            while (r1.hasNext()){
+                if(r1.equals(nombre)){
+                    r2.next();
+                }else{
+                    res1.add(r2.next());
+                }
+            }
+            //Nueva lista para guardar el total de canciones que estan en los generos que no escucha el usuario
+            LinkedList<String> res = new LinkedList();
+            //primero for hace un recorrido en la lista de generos, avanza genero por genero
+            for(int i = 0; i <res1.size();i++){
+                //segundo for lee todas las canciones del genero en cuestion y las va agregando a la lista total
+                for(int j = 0; j <iniciarRadioGenero(res1.get(i)).size(); j++){
+                    res.add(iniciarRadioGenero(res1.get(i)).get(j));
+                }
+            }
+            tx.success();
+            //Se regresa la lista total
+            return res;
         }       
     }
     

@@ -1,4 +1,4 @@
-/*
+
  * Universidad del Valle de Guatemala
  * Algoritmos y Estructura de Datos
  * Ing. Douglas Barrios
@@ -30,7 +30,7 @@ public class Pruebas {
         //Se crea una fabrica para crear bases de datos
         GraphDatabaseFactory dbFactory = new GraphDatabaseFactory();
         //Se obtiene la dirección de la base de datos, esta cambia en cada computadora:
-        File directorio = new File("C:\\Users\\usuario\\Desktop\\PROYECTO ADT 2\\MUSEEKING\\db");
+        File directorio = new File(".\\db");
         //Se utiliza el objeto tipo file para ingresar al archivo del grafo
         GraphDatabaseService graphDb = dbFactory.newEmbeddedDatabase(directorio);
         
@@ -44,17 +44,15 @@ public class Pruebas {
         System.out.println("PRUEBA DE MUSEEKING  \n");
         System.out.println(" INGRESAR USUARIO  \n");
         System.out.println(" Igrese el nombre:  ");
-        String name = teclado.next();
+        String name = teclado.nextLine();
         
-        //dataBase.crearUsuario(graphDb, name);
+        dataBase.crearUsuario(name, graphDb);
         Node user = request.ingreso(name);
         
         System.out.println( request.toString(request.canciones()) + "\n");
         
         System.out.println("Escoja una cancion: ");
-        temp = teclado.next();
-        //Descomentar si tiene mas de dos palabras la cancion, si tiene tres agregar otra linea igual
-        //temp = temp + " " +teclado.next();
+        temp = teclado.nextLine();//Aquí se usa nextLine por si la cancion tiene mas de una palabra
         
         //verificador del String que se utilizara para buscar la cancion
         System.out.println("Cancion esocigda: "+temp);
